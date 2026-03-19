@@ -48,6 +48,7 @@ canvas{display:block;width:100vw;height:100vh;position:fixed;inset:0}
 .bg2{border-color:#543;color:#ba7}.bg2:hover{background:#221a0a;color:#dca}
 .bw2{border-color:#333;color:#667}.bw2:hover{background:#1a1a1a;color:#999}
 .bred{border-color:#522;color:#a55}.bred:hover{background:#1a0a0a;color:#d77}
+.byel{border-color:#554;color:#ff0}.byel:hover{background:#222200;color:#ff4;box-shadow:0 0 12px rgba(255,220,0,.15)}
 .brow{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:8px}
 #pause-over{position:fixed;inset:0;background:rgba(0,0,0,.9);display:none;flex-direction:column;align-items:center;justify-content:center;gap:12px;z-index:40;pointer-events:all}
 #pause-over.show{display:flex}
@@ -147,14 +148,22 @@ canvas{display:block;width:100vw;height:100vh;position:fixed;inset:0}
 #chip-txt{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;z-index:32;display:none;font-family:'Orbitron',monospace;font-size:clamp(22px,5vw,60px);font-weight:900;letter-spacing:6px;text-align:center;white-space:nowrap}
 #chip-txt.show{display:block;animation:chipTxt 1.8s ease forwards}
 @keyframes chipTxt{0%{opacity:0;transform:translate(-50%,-50%) scale(.3) rotate(-5deg)}15%{opacity:1;transform:translate(-50%,-50%) scale(1.15) rotate(1deg)}30%{transform:translate(-50%,-50%) scale(.95)}70%{opacity:1;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-50%) scale(1.3) rotate(3deg)}}
-
 #boss-bar-wrap{position:fixed;top:44px;left:50%;transform:translateX(-50%);width:240px;display:none;flex-direction:column;align-items:center;gap:3px;pointer-events:none;z-index:15}
 #boss-bar-wrap.show{display:flex}
 #boss-bar-lbl{font-size:8px;letter-spacing:3px;color:#f44}
 #boss-bar-outer{width:100%;height:7px;background:#1a0000;border:1px solid #422;overflow:hidden}
 #boss-bar-fill{height:100%;background:linear-gradient(90deg,#f44,#f80);transition:width .12s}
-
-/* Changelog modal */
+#pre-boss{position:fixed;inset:0;background:rgba(0,0,0,.96);z-index:50;display:none;flex-direction:column;align-items:center;justify-content:flex-start;overflow-y:auto;padding:24px 14px 40px;pointer-events:all}
+#pre-boss.show{display:flex}
+#pre-boss-warning{text-align:center;margin-bottom:18px}
+#pre-boss-warning .w-top{font-size:8px;letter-spacing:5px;color:#f44;margin-bottom:6px;animation:warningBlink .7s steps(1) infinite}
+@keyframes warningBlink{0%,100%{opacity:1}50%{opacity:.2}}
+#pre-boss-warning .w-main{font-size:clamp(20px,4vw,38px);font-weight:900;letter-spacing:6px;color:#ff2200;font-family:'Orbitron',monospace;text-shadow:0 0 30px #f004;margin-bottom:4px}
+#pre-boss-warning .w-sub{font-size:9px;letter-spacing:3px;color:#664;margin-bottom:10px}
+#pre-boss-warning .w-hint{font-size:8px;letter-spacing:2px;color:#445;padding:6px 12px;border:1px dashed #333;background:#0a0a0a}
+#pre-boss .shop-ttl{margin-bottom:2px}
+#pre-boss .shop-c{margin-bottom:8px}
+#pre-boss-btns{display:flex;gap:8px;justify-content:center;margin-top:14px;flex-wrap:wrap}
 #changelog-modal{position:fixed;inset:0;background:#04000f;z-index:100;display:none;flex-direction:column;align-items:center;justify-content:flex-start;overflow-y:auto;padding:24px 14px 44px;pointer-events:all}
 #changelog-modal.show{display:flex}
 .cl-entry{width:100%;max-width:560px;margin-bottom:16px;border-left:2px solid #334;padding-left:14px}
@@ -174,16 +183,36 @@ canvas{display:block;width:100vw;height:100vh;position:fixed;inset:0}
 <div id="chip-txt"></div>
 <div id="tooltip"><div class="tt-name" id="tt-name"></div><div class="tt-body" id="tt-body"></div><div class="tt-cd" id="tt-cd"></div></div>
 <div id="toast-stack"></div>
-
 <div id="boss-bar-wrap"><div id="boss-bar-lbl">BOSS</div><div id="boss-bar-outer"><div id="boss-bar-fill"></div></div></div>
 
-<!-- Changelog Modal -->
+<div id="pre-boss">
+  <div id="pre-boss-warning">
+    <div class="w-top">⚠ ALERT ⚠</div>
+    <div class="w-main">BOSS INCOMING</div>
+    <div class="w-sub" id="pre-boss-sub">PREPARE YOUR SHIP</div>
+    <div class="w-hint">VISIT THE HANGAR BEFORE THE FIGHT — OR LAUNCH NOW</div>
+  </div>
+  <div class="shop-ttl">HANGAR</div>
+  <div class="shop-c">&#x2B21; <span id="pre-boss-cd">0</span> COINS</div>
+  <div id="pre-boss-ship-sections" style="width:100%;max-width:920px"></div>
+  <div id="pre-boss-btns">
+    <button class="btn byel" id="btn-pb-fight">⚔ FIGHT THE BOSS</button>
+  </div>
+</div>
+
 <div id="changelog-modal">
   <div class="modal-title" style="color:#8bc;margin-bottom:6px">CHANGELOG</div>
   <div style="font-size:8px;letter-spacing:2px;color:#334;margin-bottom:18px">PATCH NOTES & UPDATES</div>
   <div class="cl-entry">
-    <div class="cl-ver">V 2.0</div>
+    <div class="cl-ver">V 2.1</div>
     <div class="cl-date">LATEST</div>
+    <div class="cl-item new">Pre-boss Hangar screen — switch ships before every boss fight</div>
+    <div class="cl-item new">New ship: APEX — Orbital Strike ability, JG2</div>
+    <div class="cl-item new">New ship: REVENANT — Soul Harvest ability, JG2</div>
+  </div>
+  <div class="cl-entry">
+    <div class="cl-ver">V 2.0</div>
+    <div class="cl-date">PREVIOUS</div>
     <div class="cl-item new">Added 10 new JG2 ships with unique abilities</div>
     <div class="cl-item new">Boss encounters — survive waves for huge rewards</div>
     <div class="cl-item new">Achievement system with 20 unlockable achievements</div>
@@ -263,7 +292,7 @@ canvas{display:block;width:100vw;height:100vh;position:fixed;inset:0}
     <div class="brow" style="margin-top:2px"><button class="btn bw2" id="btn-ach-open">&#127942; ACHIEVEMENTS</button></div>
     <div class="brow" style="margin-top:2px"><button class="btn bw2" id="btn-changelog">&#9776; CHANGELOG</button></div>
     <div style="margin-top:12px;font-size:8px;color:#332244;letter-spacing:1px;text-align:center">ARROWS/WASD — MOVE &nbsp;|&nbsp; SPACE — ABILITY &nbsp;|&nbsp; ESC — PAUSE</div>
-    <div style="position:absolute;bottom:16px;font-size:8px;color:#333;letter-spacing:1px">made by Chip Hill · v2.0</div>
+    <div style="position:absolute;bottom:16px;font-size:8px;color:#333;letter-spacing:1px">made by Chip Hill · v2.1</div>
   </div>
   <div id="pause-over">
     <h2>PAUSED</h2><p class="ph">ESC TO RESUME</p>
@@ -322,7 +351,6 @@ const ACH_ICONS={
   rainbow:'<svg viewBox="0 0 20 20" width="20" height="20" xmlns="http://www.w3.org/2000/svg"><path d="M2,16 Q2,5 10,5 Q18,5 18,16" fill="none" stroke="#ff0000" stroke-width="1.5"/><path d="M3.5,16 Q3.5,7 10,7 Q16.5,7 16.5,16" fill="none" stroke="#ff8800" stroke-width="1.2"/><path d="M5,16 Q5,9 10,9 Q15,9 15,16" fill="none" stroke="#ffff00" stroke-width="1.1"/><path d="M6.5,16 Q6.5,11 10,11 Q13.5,11 13.5,16" fill="none" stroke="#00cc00" stroke-width="1"/><path d="M8,16 Q8,13 10,13 Q12,13 12,16" fill="none" stroke="#0066ff" stroke-width=".9"/></svg>',
 };
 
-// ── SHIP DATA ─────────────────────────────────────────────────────────────────
 const JG1=[
   {id:'viper',  jg:1,name:'VIPER',  cost:0,   bodyC:'#7ec8ff',wingC:'#3a7ccc',glowC:'#00ffff',body:0x7ec8ff,em:0x001030,wing:0x3a7ccc,glow:0x00ffff,lc:0x00aaff,ability:'SPEED BOOST',  afull:'Hold SPACE: 2x speed, fuel drains in ~3s.',holdable:true,fuelMax:3,fuelDrain:1,fuelRefill:.5,boostMult:2,acolor:'#00ffff',abar:'linear-gradient(90deg,#0af,#06f)'},
   {id:'inferno',jg:1,name:'INFERNO',cost:200, bodyC:'#ff4400',wingC:'#cc2200',glowC:'#ff6600',body:0xff4400,em:0x1a0500,wing:0xcc2200,glow:0xff6600,lc:0xff3300,ability:'AFTERBURN',    afull:'3x speed for 2s. 6s CD.',holdable:false,acd:6,adur:2,acolor:'#ff6600',abar:'linear-gradient(90deg,#f60,#f20)'},
@@ -343,8 +371,10 @@ const JG2=[
   {id:'storm',  jg:2,name:'STORM',  cost:700, bodyC:'#88ddff',wingC:'#4499cc',glowC:'#ffffff',body:0x88ddff,em:0x0a1a22,wing:0x4499cc,glow:0xffffff,lc:0x88ccff,ability:'LIGHTNING',    afull:'Chain lightning through asteroids in 6 units — close ones explode. 7s CD.',holdable:false,acd:7,adur:.05,acolor:'#88ddff',abar:'linear-gradient(90deg,#8df,#49c)'},
   {id:'void',   jg:2,name:'VOID',   cost:950, bodyC:'#0a0018',wingC:'#180033',glowC:'#5500aa',body:0x0a0018,em:0x050010,wing:0x180033,glow:0x5500aa,lc:0x4400aa,ability:'SINGULARITY', afull:'Black hole for 3s — pulls all asteroids in. Crushed: 10 coins each. 15s CD.',holdable:false,acd:15,adur:3,acolor:'#aa44ff',abar:'linear-gradient(90deg,#a4f,#60a)'},
   {id:'blaze',  jg:2,name:'BLAZE',  cost:650, bodyC:'#ff6600',wingC:'#cc3300',glowC:'#ffaa00',body:0xff6600,em:0x1a0800,wing:0xcc3300,glow:0xffaa00,lc:0xff7700,ability:'FIRESTORM',   afull:'Hold SPACE: spray fire behind — asteroids in rear cone destroyed. Fuel: 4s.',holdable:true,fuelMax:4,fuelDrain:1,fuelRefill:.5,boostMult:1,acolor:'#ff8800',abar:'linear-gradient(90deg,#f80,#f40)'},
-  {id:'prism',  jg:2,name:'PRISM',  cost:1100,bodyC:'#ffffff',wingC:'#aaddff',glowC:'#ffaaff',body:0xffffff,em:0x101010,wing:0xaaddff,glow:0xffaaff,lc:0xffffff,ability:'REFRACT',      afull:'Press SPACE: split into 5 mirror clones for 3s — each clone destroys asteroids it touches. 12s CD.',holdable:false,acd:12,adur:3,acolor:'#ffddff',abar:'linear-gradient(90deg,#fdf,#adf,#ffd)'},
-  {id:'kraken', jg:2,name:'KRAKEN', cost:1200,bodyC:'#004455',wingC:'#002233',glowC:'#00ccff',body:0x004455,em:0x001a22,wing:0x002233,glow:0x00ccff,lc:0x0088bb,ability:'TENTACLES',   afull:'Press SPACE: 6 tentacle beams sweep the field for 2.5s — each asteroid hit gives 6 coins. 11s CD.',holdable:false,acd:11,adur:2.5,acolor:'#00ccff',abar:'linear-gradient(90deg,#0cf,#04a)'},
+  {id:'prism',  jg:2,name:'PRISM',  cost:1100,bodyC:'#ffffff',wingC:'#aaddff',glowC:'#ffaaff',body:0xffffff,em:0x101010,wing:0xaaddff,glow:0xffaaff,lc:0xffffff,ability:'REFRACT',      afull:'Split into 5 mirror clones for 3s — each clone destroys asteroids it touches. 12s CD.',holdable:false,acd:12,adur:3,acolor:'#ffddff',abar:'linear-gradient(90deg,#fdf,#adf,#ffd)'},
+  {id:'kraken', jg:2,name:'KRAKEN', cost:1200,bodyC:'#004455',wingC:'#002233',glowC:'#00ccff',body:0x004455,em:0x001a22,wing:0x002233,glow:0x00ccff,lc:0x0088bb,ability:'TENTACLES',   afull:'6 tentacle beams sweep the field for 2.5s — each asteroid hit gives 6 coins. 11s CD.',holdable:false,acd:11,adur:2.5,acolor:'#00ccff',abar:'linear-gradient(90deg,#0cf,#04a)'},
+  {id:'apex',   jg:2,name:'APEX',   cost:1400,bodyC:'#ff2266',wingC:'#990033',glowC:'#ff88aa',body:0xff2266,em:0x1a0010,wing:0x990033,glow:0xff88aa,lc:0xff4488,ability:'ORBITAL STRIKE',afull:'Call 3 targeted strikes from above — each impacts and destroys all asteroids within 1.8 units. 10s CD.',holdable:false,acd:10,adur:.05,acolor:'#ff4488',abar:'linear-gradient(90deg,#f48,#f02)'},
+  {id:'revenant',jg:2,name:'REVENANT',cost:1600,bodyC:'#33ff99',wingC:'#009944',glowC:'#aaffcc',body:0x33ff99,em:0x001a0a,wing:0x009944,glow:0xaaffcc,lc:0x44ffaa,ability:'SOUL HARVEST',afull:'On use: gain +1 shield and destroy all asteroids near you (3 units), absorbing their energy. +12 coins each. 13s CD.',holdable:false,acd:13,adur:.05,acolor:'#44ffaa',abar:'linear-gradient(90deg,#4fa,#09a)'},
   {id:'chip',   jg:2,name:"CHIP'S PLANE",cost:2500,bodyC:'#ff0000',wingC:'#ff8800',glowC:'#ffffff',body:0xff0000,em:0x220000,wing:0xff8800,glow:0xffffff,lc:0xffffff,ability:'SECTOR SKIP',afull:'Blast ALL asteroids, skip 5 sectors, full shields, invincible 5s, 5x speed. 5 min CD. Ship is permanently rainbow.',holdable:false,acd:300,adur:5,acolor:'#ff00ff',abar:'linear-gradient(90deg,#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00)',isChip:true},
 ];
 const SHIPS=[...JG1,...JG2];
@@ -412,7 +442,6 @@ function buildAchModal(){
   c.innerHTML=`<div class="ach-icon">${iconSvg}</div><div class="ach-name">${a.name}</div><div class="ach-desc">${a.desc}</div><div class="ach-reward">+${a.reward} &#x2B21;</div><div class="ach-badge">&#x2713; UNLOCKED</div>`;g.appendChild(c);});
 }
 
-
 const canvas=document.getElementById('c');
 const renderer=new THREE.WebGLRenderer({canvas,antialias:false,powerPreference:'high-performance'});
 renderer.setPixelRatio(1);renderer.setSize(window.innerWidth,window.innerHeight);renderer.setClearColor(0x02000a);
@@ -444,13 +473,114 @@ for(let i=0;i<20;i++){const arr=new Float32Array(PN*3),g=new THREE.BufferGeometr
 function burst(px,py,pz,col,cnt){cnt=cnt||PN;const p=PPOOL.find(p=>!p.userData.on);if(!p)return;const d=p.userData,a=p.geometry.attributes.position.array;for(let i=0;i<cnt;i++){a[i*3]=px;a[i*3+1]=py;a[i*3+2]=pz;d.vx[i]=(Math.random()-.5)*.3;d.vy[i]=(Math.random()-.5)*.3;d.vz[i]=(Math.random()-.5)*.3+.08;}p.geometry.attributes.position.needsUpdate=true;p.material.color.setHex(col);p.material.opacity=1;p.material.size=.14;d.on=true;d.life=1;p.visible=true;}
 const empMesh=new THREE.Mesh(new THREE.TorusGeometry(.3,.05,8,22),new THREE.MeshBasicMaterial({color:0x00ff88,transparent:true,opacity:0}));scene.add(empMesh);let empT=0;
 let bossAst=null,bossHP=0,bossMaxHP=0,bossActive=false;
+let preBossShown=false,pendingBossSpawn=false;
 const BOSS_GEO=new THREE.IcosahedronGeometry(1.8,1);
 (()=>{const p=BOSS_GEO.attributes.position;for(let i=0;i<p.count;i++)p.setXYZ(i,p.getX(i)*(.8+Math.random()*.4),p.getY(i)*(.8+Math.random()*.4),p.getZ(i)*(.8+Math.random()*.4));p.needsUpdate=true;BOSS_GEO.computeVertexNormals();})();
 const BOSS_MAT=new THREE.MeshLambertMaterial({color:0xcc2200,flatShading:true,emissive:0x220000});
-function spawnBoss(){if(bossActive)return;bossAst=new THREE.Mesh(BOSS_GEO,BOSS_MAT.clone());bossAst.position.set(0,0,-70);bossAst.rotation.set(Math.random()*6.28,Math.random()*6.28,Math.random()*6.28);bossAst.userData={spd:baseSpd*.5,rx:.008,ry:.012,rz:.006,sz:1.8,homingStr:.06,vx:0,vy:0,isBoss:true,marked:false,markT:0};const sec=Math.min(Math.floor(gtime/25),8);bossHP=3+sec*2;bossMaxHP=bossHP;scene.add(bossAst);bossActive=true;document.getElementById('boss-bar-wrap').classList.add('show');updateBossBar();showSectorAnnounce('WARNING','BOSS INCOMING','#f44','#f44');popMsg('⚠ BOSS!','#f44');}
+
+function openPreBoss(){
+  state='preboss';
+  document.getElementById('pre-boss-sub').textContent='SECTOR '+SECN[Math.min(Math.floor(gtime/25),8)]+' BOSS — CHOOSE YOUR SHIP';
+  document.getElementById('pre-boss-cd').textContent=Math.floor(coins);
+  buildPreBossShop();
+  document.getElementById('pre-boss').classList.add('show');
+}
+function closePreBoss(){
+  document.getElementById('pre-boss').classList.remove('show');
+  state='playing';
+  actuallySpawnBoss();
+}
+function buildPreBossShop(){
+  const secs=document.getElementById('pre-boss-ship-sections');secs.innerHTML='';
+  [{label:'JANKY GAME 1',cls:'jg1',badge:'CLASSIC FLEET',ships:JG1},{label:'JANKY GAME 2',cls:'jg2',badge:'NEW',ships:JG2}].forEach(grp=>{
+    const sec=document.createElement('div');sec.className='hangar-section';
+    const hdr=document.createElement('div');hdr.className='hangar-hdr '+grp.cls;
+    hdr.innerHTML=grp.label+' <span class="sec-badge">'+grp.badge+'</span>';
+    const grid=document.createElement('div');grid.className='ship-grid';
+    grp.ships.forEach(sk=>{
+      const isOwn=owned.includes(sk.id),isEq=equipped===sk.id;
+      const card=document.createElement('div');
+      if(isEq&&sk.isChip)card.className='ship-card chip-active owned';
+      else card.className='ship-card'+(isOwn?' owned':'')+(isEq?' active':'');
+      card.innerHTML=makeSVG(sk);
+      const badge=document.createElement('div');badge.className='cbadge '+(isEq?'cb-a':isOwn?'cb-o':'');badge.textContent=isEq?'ON':isOwn?'OK':'';
+      const nm=document.createElement('div');nm.className='ship-name'+(sk.isChip?' chip-name':'');nm.textContent=sk.name;
+      const ab=document.createElement('div');ab.className='ab-tag';ab.style.cssText=`background:${sk.acolor}13;color:${sk.acolor};border:1px solid ${sk.acolor}35`;ab.textContent=sk.ability;
+      ab.addEventListener('mouseenter',e=>{e.stopPropagation();showTT(e,sk);});ab.addEventListener('mousemove',moveTT);ab.addEventListener('mouseleave',hideTT);
+      const ct=document.createElement('div');ct.className='ship-cost';ct.textContent=isOwn?(isEq?'EQUIPPED':'SELECT'):sk.cost+' ⬡';
+      card.append(badge,nm,ab,ct);
+      card.addEventListener('click',()=>{
+        if(isEq)return;
+        if(isOwn){
+          equipped=sk.id;writeSv();
+          rebuildShipInGame();
+          buildPreBossShop();
+          popMsg('SWITCHED: '+sk.name,sk.acolor);
+        }else if(coins>=sk.cost){
+          coins-=sk.cost;owned.push(sk.id);equipped=sk.id;
+          if(sk.id==='ghost')achStats.ghostUnlocked=true;
+          if(sk.id==='chip')achStats.chipUnlocked=true;
+          writeSv();checkAchievements();
+          rebuildShipInGame();
+          buildPreBossShop();
+          document.getElementById('pre-boss-cd').textContent=Math.floor(coins);
+          popMsg('UNLOCKED: '+sk.name,sk.acolor);
+        }else popMsg('NEED MORE COINS','#f55');
+      });
+      grid.appendChild(card);
+    });
+    sec.appendChild(hdr);sec.appendChild(grid);secs.appendChild(sec);
+  });
+}
+function rebuildShipInGame(){
+  if(ship){scene.remove(ship.group);}
+  decoyMeshes.forEach(d=>scene.remove(d));decoyMeshes=[];
+  prismClones.forEach(c=>scene.remove(c.mesh));prismClones=[];
+  ship=buildShipMesh(equipped);
+  ship.group.position.set(shipX,shipY,-3);
+  scene.add(ship.group);
+  phasing=false;timeSlowed=false;cloaked=false;shockwaveActive=false;
+  abilActive=false;abilActiveT=0;abilTimer=0;fuelTank=1;abilPct=1;
+  const sk=getShip();
+  D.abLbl.textContent=sk.holdable?sk.ability+' (HOLD)':sk.ability;
+  D.abFill.style.background=sk.abar;
+  _ab=-1;
+}
+
+function spawnBoss(){
+  if(bossActive)return;
+  if(preBossShown)return;
+  preBossShown=true;
+  pendingBossSpawn=true;
+  openPreBoss();
+}
+function actuallySpawnBoss(){
+  if(bossActive)return;
+  bossAst=new THREE.Mesh(BOSS_GEO,BOSS_MAT.clone());
+  bossAst.position.set(0,0,-70);
+  bossAst.rotation.set(Math.random()*6.28,Math.random()*6.28,Math.random()*6.28);
+  bossAst.userData={spd:baseSpd*.5,rx:.008,ry:.012,rz:.006,sz:1.8,homingStr:.06,vx:0,vy:0,isBoss:true,marked:false,markT:0};
+  const sec=Math.min(Math.floor(gtime/25),8);
+  bossHP=3+sec*2;bossMaxHP=bossHP;
+  scene.add(bossAst);bossActive=true;pendingBossSpawn=false;
+  document.getElementById('boss-bar-wrap').classList.add('show');
+  updateBossBar();
+  showSectorAnnounce('WARNING','BOSS FIGHT','#f44','#f44');
+  popMsg('⚠ BOSS!','#f44');
+}
 function updateBossBar(){if(!bossActive){document.getElementById('boss-bar-wrap').classList.remove('show');return;}document.getElementById('boss-bar-fill').style.width=Math.max(0,bossHP/bossMaxHP*100)+'%';}
 function damageBoss(dmg){if(!bossActive)return;bossHP-=dmg;shakeM=Math.max(shakeM,.2);burst(bossAst.position.x,bossAst.position.y,bossAst.position.z,0xff2200,PN);updateBossBar();if(bossHP<=0)killBoss();}
-function killBoss(){if(!bossActive)return;const sec=Math.min(Math.floor(gtime/25),8);const rw=30+sec*10;coins+=rw;runStats.bk++;achStats.bossKills=(achStats.bossKills||0)+1;for(let i=0;i<4;i++)setTimeout(()=>burst(bossAst.position.x+(Math.random()-.5)*2,bossAst.position.y+(Math.random()-.5)*2,bossAst.position.z,0xff4400,PN),i*80);scene.remove(bossAst);bossAst=null;bossActive=false;document.getElementById('boss-bar-wrap').classList.remove('show');score+=500*mult;writeSv();checkAchievements();popMsg('BOSS SLAIN! +'+rw+' ⬡','#ff4400');showToast('','BOSS DESTROYED','Score +500 · Coins +'+rw,'','#f84',3);}
+function killBoss(){
+  if(!bossActive)return;
+  const sec=Math.min(Math.floor(gtime/25),8);
+  const rw=30+sec*10;coins+=rw;runStats.bk++;achStats.bossKills=(achStats.bossKills||0)+1;
+  for(let i=0;i<4;i++)setTimeout(()=>burst(bossAst.position.x+(Math.random()-.5)*2,bossAst.position.y+(Math.random()-.5)*2,bossAst.position.z,0xff4400,PN),i*80);
+  scene.remove(bossAst);bossAst=null;bossActive=false;preBossShown=false;
+  document.getElementById('boss-bar-wrap').classList.remove('show');
+  score+=500*mult;writeSv();checkAchievements();
+  popMsg('BOSS SLAIN! +'+rw+' ⬡','#ff4400');
+  showToast('','BOSS DESTROYED','Score +500 · Coins +'+rw,'','#f84',3);
+}
 
 let chipRainbowHue=0;
 function chipAnimFire(){
@@ -547,7 +677,6 @@ let sectorAnnTmr=null;
 function showSectorAnnounce(sub,main,col,shadow){const el=document.getElementById('sector-announce'),sa=document.getElementById('sa-text');el.querySelector('.sa-sub').textContent=sub;sa.textContent=main;sa.style.color=col||'#ff0';sa.style.textShadow='0 0 30px '+(shadow||'#ff08');el.style.display='block';el.style.animation='none';void el.offsetWidth;el.style.animation='secAnn 2s ease forwards';clearTimeout(sectorAnnTmr);sectorAnnTmr=setTimeout(()=>{el.style.display='none';el.style.animation='none';},2100);}
 let _popTmr=null;
 function popMsg(txt,col){col=col||'#ff0';D.pop.textContent=txt;D.pop.style.color=col;D.pop.style.display='block';D.pop.style.animation='none';D.pop.offsetHeight;D.pop.style.animation='popA .72s ease-out forwards';clearTimeout(_popTmr);_popTmr=setTimeout(()=>D.pop.style.display='none',780);}
-function addKF(txt,col,icon,sub){showToast(icon||'','txt',sub||'',null,col||'#aaa',3);}
 const SCREENS={start:document.getElementById('start'),ov:document.getElementById('ov'),shop:document.getElementById('shop')};
 let state='menu';
 function showScreen(id){Object.entries(SCREENS).forEach(([k,el])=>el.classList.toggle('off',k!==id));D.hud.classList.add('off');if(id==='start')clearAllToasts();if(id==='ov'){const ov=document.getElementById('ov');ov.offsetHeight;requestAnimationFrame(()=>ov.classList.add('fadein'));}}
@@ -565,6 +694,7 @@ let dying=false,dyingT=0,deathReady=false,bossCooldown=0;
 let scoreMultBonus=1,scoreMultBonusT=0,ghostDrainCount=0;
 let decoyMeshes=[],singularityActive=false,singT=0,singMesh=null,blazeActive=false;
 let prismClones=[],tentacleAngle=0,tentacleActive=false;
+let apexStrikes=[],revenantActive=false;
 
 function getShip(){return SHIPS.find(s=>s.id===equipped)||SHIPS[0];}
 
@@ -604,6 +734,8 @@ function fireAbility(){
     case 'SINGULARITY':singularityActive=true;singT=0;popMsg('SINGULARITY!',sk.acolor);break;
     case 'REFRACT':doRefract(sk);break;
     case 'TENTACLES':tentacleActive=true;tentacleAngle=0;popMsg('TENTACLES!',sk.acolor);break;
+    case 'ORBITAL STRIKE':doOrbitalStrike(sk);endAbility();break;
+    case 'SOUL HARVEST':doSoulHarvest(sk);endAbility();break;
     default:popMsg(sk.ability+'!',sk.acolor);
   }
 }
@@ -615,6 +747,7 @@ function endAbility(){
   if(singularityActive){singularityActive=false;if(singMesh){scene.remove(singMesh);singMesh=null;}}
   decoyMeshes.forEach(d=>scene.remove(d));decoyMeshes=[];blazeActive=false;tentacleActive=false;
   prismClones.forEach(c=>scene.remove(c.mesh));prismClones=[];
+  apexStrikes=[];revenantActive=false;
 }
 function doEMP(sk,radius,cpr,col){
   const r2=radius*radius;let n=0;for(let i=asteroids.length-1;i>=0;i--){const a=asteroids[i];const dx=shipX-a.position.x,dy=shipY-a.position.y;if(dx*dx+dy*dy<r2){burst(a.position.x,a.position.y,a.position.z,col);scene.remove(a);asteroids.splice(i,1);score+=40*mult;n++;}}
@@ -659,6 +792,48 @@ function doRefract(sk){
   prismClones.forEach(c=>scene.remove(c));prismClones=[];
   for(let i=0;i<5;i++){const ang=i/5*Math.PI*2;const d=buildShipMesh(equipped);const r=1.4;d.group.position.set(shipX+Math.cos(ang)*r,shipY+Math.sin(ang)*r,-3);d.group.scale.setScalar(.55);d.group.children.forEach(c=>{if(c.material&&!c.isLight){c.material=c.material.clone();c.material.transparent=true;c.material.opacity=.7;}});scene.add(d.group);prismClones.push({mesh:d.group,ang,baseAng:ang});}
   popMsg('REFRACT!',sk.acolor);
+}
+function doOrbitalStrike(sk){
+  const col=parseInt(sk.acolor.replace('#',''),16);
+  const targets=[];
+  for(let i=0;i<3;i++){
+    let best=null,bestD=99;
+    asteroids.forEach(a=>{if(targets.includes(a))return;const dx=shipX-a.position.x,dy=shipY-a.position.y;const d=dx*dx+dy*dy;if(d<bestD){bestD=d;best=a;}});
+    if(best)targets.push(best);
+  }
+  if(targets.length===0){popMsg('ORBITAL MISS!',sk.acolor);return;}
+  let totalCoins=0;
+  targets.forEach((tgt,ti)=>{
+    setTimeout(()=>{
+      if(!tgt||!scene.children.includes(tgt))return;
+      const tx=tgt.position.x,ty=tgt.position.y,tz=tgt.position.z;
+      const R2=1.8*1.8;
+      for(let i=asteroids.length-1;i>=0;i--){
+        const a=asteroids[i];const dx=tx-a.position.x,dy=ty-a.position.y;
+        if(dx*dx+dy*dy<R2){burst(a.position.x,a.position.y,a.position.z,col,16);scene.remove(a);asteroids.splice(i,1);score+=60*mult;totalCoins+=8;}
+      }
+      burst(tx,ty,tz,col,20);burst(tx,ty,tz-1,col,12);
+      empMesh.material.color.setHex(col);empMesh.position.set(tx,ty,-3);empMesh.scale.setScalar(2);empMesh.material.opacity=1;empT=.4;
+      shakeM=Math.max(shakeM,.25);
+      if(bossActive){const dx=tx-bossAst.position.x,dy=ty-bossAst.position.y;if(dx*dx+dy*dy<4)damageBoss(4);}
+    },ti*300);
+  });
+  setTimeout(()=>{if(totalCoins>0){coins+=totalCoins;writeSv();_co=-1;}popMsg('ORBITAL STRIKE! +'+totalCoins+' ⬡',sk.acolor);},targets.length*300+50);
+}
+function doSoulHarvest(sk){
+  const col=parseInt(sk.acolor.replace('#',''),16);
+  const R=3,R2=R*R;let n=0;
+  for(let i=asteroids.length-1;i>=0;i--){
+    const a=asteroids[i];const dx=shipX-a.position.x,dy=shipY-a.position.y;
+    if(dx*dx+dy*dy<R2){burst(a.position.x,a.position.y,a.position.z,col,18);scene.remove(a);asteroids.splice(i,1);score+=55*mult;n++;}
+  }
+  shields=Math.min(shields+1,3);
+  const e=n*12;if(e>0){coins+=e;writeSv();_co=-1;}
+  if(bossActive){const dx=shipX-bossAst.position.x,dy=shipY-bossAst.position.y;if(dx*dx+dy*dy<R2*4)damageBoss(4);}
+  empMesh.material.color.setHex(col);empMesh.position.set(shipX,shipY,-3);empMesh.scale.setScalar(1.5);empMesh.material.opacity=1;empT=.6;
+  shakeM=Math.max(shakeM,.2);
+  popMsg('SOUL HARVEST! +1 ⬡ +'+e+' ⬡',sk.acolor);
+  showToast('','SOUL HARVEST','Shield restored · Asteroids absorbed','','#44ffaa',3);
 }
 
 function tickDeathMark(dt){let e=0;for(let i=asteroids.length-1;i>=0;i--){const a=asteroids[i];if(!a.userData.marked)continue;a.userData.markT-=dt;if(a.material&&a.material.emissive){const p=Math.abs(Math.sin(a.userData.markT*10));a.material.emissive.setRGB(p*.6,0,p*.2);}if(a.userData.markT<=0){burst(a.position.x,a.position.y,a.position.z,0x9900ff,16);scene.remove(a);asteroids.splice(i,1);score+=50*mult;e+=8;}}if(bossActive&&bossAst.userData&&bossAst.userData.marked){bossAst.userData.markT-=dt;if(bossAst.userData.markT<=0){damageBoss(5);bossAst.userData.marked=false;}}if(e>0){coins+=e;writeSv();_co=-1;}}
@@ -706,7 +881,7 @@ function separateAsteroids(){
 function checkCollisions(dt){
   const pX=shipX-velX*dt*60,pY=shipY-velY*dt*60;const canHit=!invincible&&!phasing&&!cloaked;
   if(bossActive&&canHit){const dx=shipX-bossAst.position.x,dy=shipY-bossAst.position.y,dz=-3-bossAst.position.z;if(dx*dx+dy*dy+dz*dz<(1.8*.6+.25)**2)hitShip(bossAst.position.x,bossAst.position.y,bossAst.position.z);}
-  if(bossActive&&bossAst.position.z>5){hitShip(bossAst.position.x,bossAst.position.y,bossAst.position.z);scene.remove(bossAst);bossAst=null;bossActive=false;document.getElementById('boss-bar-wrap').classList.remove('show');bossCooldown=40;}
+  if(bossActive&&bossAst.position.z>5){hitShip(bossAst.position.x,bossAst.position.y,bossAst.position.z);scene.remove(bossAst);bossAst=null;bossActive=false;document.getElementById('boss-bar-wrap').classList.remove('show');bossCooldown=40;preBossShown=false;}
   for(let i=asteroids.length-1;i>=0;i--){const a=asteroids[i],sz=a.userData.sz;const dx=shipX-a.position.x,dy=shipY-a.position.y,dz=-3-a.position.z;const d2=dx*dx+dy*dy+dz*dz;const pdx=pX-a.position.x,pdy=pY-a.position.y;const pd2=pdx*pdx+pdy*pdy+dz*dz;const thr=(sz*.6+.22)**2;if(d2<thr||pd2<thr){if(canHit){hitShip(a.position.x,a.position.y,a.position.z);scene.remove(a);asteroids.splice(i,1);}continue;}if(a.position.z>5){score+=22*mult*scoreMultBonus;comboT=3.5;mult=Math.min(mult+1,10);runStats.mc=Math.max(runStats.mc,mult);burst(a.position.x,a.position.y,a.position.z,a.material.color?a.material.color.getHex():0x0044bb);scene.remove(a);asteroids.splice(i,1);}}
   for(let i=pups.length-1;i>=0;i--){const p=pups[i];const dx=shipX-p.position.x,dy=shipY-p.position.y;if(dx*dx+dy*dy<.36){const type=p.userData.type;if(type==='shield'){shields=Math.min(shields+1,3);popMsg('+1 SHIELD','#0cf');burst(p.position.x,p.position.y,p.position.z,0x00ccff);showToast('','SHIELD RESTORED','','','#0cf',2.5);}else if(type==='coins'){const c=5+Math.floor(Math.random()*8);coins+=c;popMsg('+'+c+' ⬡','#fc0');burst(p.position.x,p.position.y,p.position.z,0xffcc00);showToast('','COINS COLLECTED','+'+c+' coins','','#ffcc00',2.5);writeSv();}else if(type==='score'){scoreMultBonus=2;scoreMultBonusT=8;popMsg('2X SCORE! 8s','#4af');burst(p.position.x,p.position.y,p.position.z,0x44aaff);showToast('','SCORE BOOST','2x score for 8 seconds','','#44aaff',3);}scene.remove(p);pups.splice(i,1);}else if(p.position.z>5){scene.remove(p);pups.splice(i,1);}}
 }
@@ -732,11 +907,12 @@ const clock=new THREE.Clock();
 function animate(){
   requestAnimationFrame(animate);const dt=Math.min(clock.getDelta(),.05);frameN++;
   if(state==='dying'){tickDeath(dt);renderer.render(scene,cam);return;}
+  if(state==='preboss'){renderer.render(scene,cam);return;}
   if(state!=='playing'){renderer.render(scene,cam);return;}
   gtime+=dt;
   const sec=Math.min(Math.floor(gtime/25),8);baseSpd=5+sec*3;const maxA=5+sec*2;const spawnP=Math.min(.14+sec*.025,.5);const homF=Math.min(.25+sec*.09,.85);const sideF=Math.min(sec*.06,.3);
   bossCooldown=Math.max(0,bossCooldown-dt);
-  if(!bossActive&&bossCooldown<=0&&(sec===2||sec===5||sec===8)){const trigger=sec*25+10;if(gtime>trigger&&gtime<trigger+2&&Math.random()<.02)spawnBoss();}
+  if(!bossActive&&!pendingBossSpawn&&bossCooldown<=0&&(sec===2||sec===5||sec===8)){const trigger=sec*25+10;if(gtime>trigger&&gtime<trigger+2&&Math.random()<.02)spawnBoss();}
   const sk=getShip();
   const boosting=sk.holdable&&abilActive&&sk.id!=='ghost'&&sk.id!=='blaze';
   const spdMult=chipSkipActive?5:boosting?(sk.boostMult||2):sk.ability==='AFTERBURN'&&abilActive?2.9:1;
@@ -754,8 +930,10 @@ function animate(){
   if(equipped==='void'&&singularityActive){ship.glow.scale.setScalar(2+Math.sin(gtime*12)*.4);ship.light.intensity=3;}
   if(equipped==='prism'&&prismClones.length){ship.glow.scale.setScalar(1.5+Math.sin(gtime*8)*.3);ship.light.intensity=2;}
   if(equipped==='kraken'&&tentacleActive){ship.glow.scale.setScalar(2+Math.sin(gtime*10)*.5);ship.light.intensity=3;}
+  if(equipped==='apex'){ship.glow.scale.setScalar(1.1+Math.sin(gtime*8)*.15);ship.light.intensity=1.2;}
+  if(equipped==='revenant'){ship.glow.scale.setScalar(1.2+Math.sin(gtime*6)*.2);ship.light.intensity=1.4;}
   trailTimer+=dt;const trailInt=equipped==='chip'?.04:.12;
-  if(trailTimer>trailInt){trailTimer=0;const tSlot=TRAIL_POOL.find(t=>!t.on);if(tSlot){let tc;if(equipped==='chip'){tc=new THREE.Color().setHSL(Math.random(),1,.7).getHex();}else if(blazeActive){tc=0xff6600;}else{tc=parseInt((boosting?sk.acolor:'#334455').replace('#',''),16)||0x334455;}tSlot.on=true;tSlot.life=1;tSlot.m.material.color.setHex(tc);tSlot.m.material.opacity=equipped==='chip'||blazeActive?.9:boosting?.9:.4;tSlot.m.visible=true;tSlot.m.position.set(shipX,shipY+(Math.random()-.5)*.08,-3.28+(Math.random()-.5)*.05);tSlot.m.scale.setScalar(equipped==='chip'?2:blazeActive?2.2:boosting?1.6:.6);}}
+  if(trailTimer>trailInt){trailTimer=0;const tSlot=TRAIL_POOL.find(t=>!t.on);if(tSlot){let tc;if(equipped==='chip'){tc=new THREE.Color().setHSL(Math.random(),1,.7).getHex();}else if(blazeActive){tc=0xff6600;}else if(equipped==='apex'){tc=0xff2266;}else if(equipped==='revenant'){tc=0x33ff99;}else{tc=parseInt((boosting?sk.acolor:'#334455').replace('#',''),16)||0x334455;}tSlot.on=true;tSlot.life=1;tSlot.m.material.color.setHex(tc);tSlot.m.material.opacity=equipped==='chip'||blazeActive?.9:boosting?.9:.4;tSlot.m.visible=true;tSlot.m.position.set(shipX,shipY+(Math.random()-.5)*.08,-3.28+(Math.random()-.5)*.05);tSlot.m.scale.setScalar(equipped==='chip'?2:blazeActive?2.2:boosting?1.6:.6);}}
   for(let i=0;i<TRAIL_POOL.length;i++){const t=TRAIL_POOL[i];if(!t.on)continue;t.life-=dt*(boosting||equipped==='chip'?3.5:2.5);t.m.material.opacity=t.life*(boosting||equipped==='chip'?.9:.4);t.m.position.z+=cspd*dt*.08;if(t.life<=0){t.on=false;t.m.visible=false;}}
   if(cloaked)ship.group.visible=false;else if(!invincible)ship.group.visible=true;
   const tcx=shipX*.5,tcy=shipY*.4;camX+=(tcx-camX)*.09;camY+=(tcy-camY)*.09;
@@ -780,8 +958,9 @@ function animate(){
 
 function initGame(){
   asteroids.forEach(a=>scene.remove(a));pups.forEach(p=>scene.remove(p));asteroids=[];pups=[];
-  if(bossAst){scene.remove(bossAst);bossAst=null;}bossActive=false;bossCooldown=0;
+  if(bossAst){scene.remove(bossAst);bossAst=null;}bossActive=false;bossCooldown=0;preBossShown=false;pendingBossSpawn=false;
   document.getElementById('boss-bar-wrap').classList.remove('show');
+  document.getElementById('pre-boss').classList.remove('show');
   PPOOL.forEach(p=>{p.userData.on=false;p.material.opacity=0;p.visible=false;});
   TRAIL_POOL.forEach(t=>{t.on=false;t.m.material.opacity=0;t.m.visible=false;});
   if(ship){ship.group.children.forEach(c=>{if(c.material&&!c.isLight){c.material.transparent=false;c.material.opacity=1;}});scene.remove(ship.group);}
@@ -792,7 +971,7 @@ function initGame(){
   invincible=false;invT=0;phasing=false;timeSlowed=false;cloaked=false;shockwaveActive=false;dying=false;dyingT=0;deathReady=false;
   abilPct=1;abilTimer=0;abilActive=false;abilActiveT=0;abilUses=0;ghostDrainCount=0;
   scoreMultBonus=1;scoreMultBonusT=0;chipSkipActive=false;chipRainbowHue=0;
-  singularityActive=false;singT=0;blazeActive=false;tentacleActive=false;
+  singularityActive=false;singT=0;blazeActive=false;tentacleActive=false;apexStrikes=[];revenantActive=false;
   document.getElementById('chip-overlay').classList.remove('show');
   document.getElementById('chip-anim').classList.remove('show');document.getElementById('chip-anim').innerHTML='';
   document.getElementById('chip-txt').classList.remove('show');document.getElementById('chip-txt').innerHTML='';
@@ -806,14 +985,21 @@ function initGame(){
   showGame();state='playing';updateHUD();
 }
 
-// ── EVENT LISTENERS ────────────────────────────────────────────────────────────
 document.getElementById('btn-play').addEventListener('click',()=>initGame());
 document.getElementById('btn-replay').addEventListener('click',()=>initGame());
 document.getElementById('btn-home').addEventListener('click',()=>showScreen('start'));
 document.getElementById('btn-ach-open').addEventListener('click',()=>{buildAchModal();document.getElementById('ach-modal').classList.add('show');});
 document.getElementById('btn-ach-close').addEventListener('click',()=>document.getElementById('ach-modal').classList.remove('show'));
 document.getElementById('btn-resume').addEventListener('click',()=>{state='playing';pauseEl.classList.remove('show');});
-document.getElementById('btn-quit').addEventListener('click',()=>{pauseEl.classList.remove('show');state='menu';asteroids.forEach(a=>scene.remove(a));pups.forEach(p=>scene.remove(p));asteroids=[];pups=[];if(bossAst){scene.remove(bossAst);bossAst=null;}bossActive=false;document.getElementById('boss-bar-wrap').classList.remove('show');decoyMeshes.forEach(d=>scene.remove(d));decoyMeshes=[];prismClones.forEach(c=>scene.remove(c.mesh));prismClones=[];if(singMesh){scene.remove(singMesh);singMesh=null;}if(ship){scene.remove(ship.group);ship=null;}showScreen('start');});
+document.getElementById('btn-quit').addEventListener('click',()=>{
+  pauseEl.classList.remove('show');document.getElementById('pre-boss').classList.remove('show');state='menu';
+  asteroids.forEach(a=>scene.remove(a));pups.forEach(p=>scene.remove(p));asteroids=[];pups=[];
+  if(bossAst){scene.remove(bossAst);bossAst=null;}bossActive=false;preBossShown=false;pendingBossSpawn=false;
+  document.getElementById('boss-bar-wrap').classList.remove('show');
+  decoyMeshes.forEach(d=>scene.remove(d));decoyMeshes=[];prismClones.forEach(c=>scene.remove(c.mesh));prismClones=[];
+  if(singMesh){scene.remove(singMesh);singMesh=null;}if(ship){scene.remove(ship.group);ship=null;}showScreen('start');
+});
+document.getElementById('btn-pb-fight').addEventListener('click',()=>closePreBoss());
 function openShop(from){buildShop();document.getElementById('shop').dataset.from=from;showScreen('shop');}
 function closeShop(){showScreen(document.getElementById('shop').dataset.from||'start');}
 document.getElementById('btn-hs').addEventListener('click',()=>openShop('start'));
@@ -835,7 +1021,9 @@ const CODES={
   'lightspeed':    {ships:['herald'],   msg:'HERALD UNLOCKED!'},
   'haunted':       {ships:['ghost'],    msg:'GHOST UNLOCKED!',ghost:true},
   'chipdidthedip': {ships:['chip'],     msg:"CHIP'S PLANE UNLOCKED!",chip:true},
-  'jg2launch':     {ships:['reaper','pulse','mirage','storm','void','blaze','prism','kraken'],msg:'JG2 SHIPS UNLOCKED!'},
+  'strikeforce':   {ships:['apex'],     msg:'APEX UNLOCKED!'},
+  'reborn':        {ships:['revenant'], msg:'REVENANT UNLOCKED!'},
+  'jg2launch':     {ships:['reaper','pulse','mirage','storm','void','blaze','prism','kraken','apex','revenant'],msg:'JG2 SHIPS UNLOCKED!'},
   'iwillbethere':  {ships:SHIPS.map(s=>s.id),msg:'ALL SHIPS UNLOCKED!',ghost:true,chip:true},
 };
 function redeemCode(){
